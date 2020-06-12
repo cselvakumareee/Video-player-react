@@ -1,24 +1,18 @@
 import React, { Component } from "react";
 import TodoItems from "../TodoItems/TodoItems";
 import validator from "validator";
-import VideoPlayer from '../VideoPlayer/VideoPlayer';
-import axios from '../Axios/axios';
-import DataContext from '../Context/dataContext';
-import { connect } from 'react-redux';
-import * as todoActionCreator from '../Store/Action/todoActionCreator';
+import VideoPlayer from "../VideoPlayer/VideoPlayer";
+import { connect } from "react-redux";
+import * as todoActionCreator from "../Store/Action/todoActionCreator";
 
 class TodoList extends Component {
   constructor(props) {
     super(props);
-     
+
     this.addItem = this.addItem.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
     this.handleMove = this.handleMove.bind(this);
   }
-
-  // componentDidMount(){
-  //   this.props.onAddItem('selva');
-  // }
 
   addItem(e) {
     if (
@@ -28,53 +22,38 @@ class TodoList extends Component {
     ) {
       let hostName = new URL(this._inputElement.value).host;
       let pathName = new URL(this._inputElement.value).pathname;
-      console.log("hostName "+hostName);
-      console.log("pathName "+pathName);
-      if (
-        hostName === "www.youtube.com" && pathName === "/watch")
-       {
-  
+      console.log("hostName " + hostName);
+      console.log("pathName " + pathName);
+      if (hostName === "www.youtube.com" && pathName === "/watch") {
         let newItem = {
           text: this._inputElement.value,
           key: Date.now(),
         };
-        // this.setState((prevState) => {
-        //   return {
-        //     items: prevState.items.concat(newItem),
-        //   };
-        // });
+
         this.props.onAddItem(newItem);
         this._inputElement.value = "";
       } else {
         alert("Enter proper youtube url");
         this._inputElement.value = "";
       }
-    }
-    else{
+    } else {
       alert("This is not a url, may be random text");
     }
-    
+
     e.preventDefault();
-    
   }
 
   deleteItem(key) {
-      //alert("working del");
     let filteredItems = this.props.todoItems.filter((item) => {
       return item.key !== key;
     });
-
-    // this.setState({
-    //   items: filteredItems,
-    // });
     this.props.onRemoveItem(filteredItems);
   }
 
   handleMove(key, direction) {
-      
-     const UP = -1;
-     const DOWN = 1;
-    const {todoItems} = this.props
+    const UP = -1;
+    const DOWN = 1;
+    const { todoItems } = this.props;
 
     let positionOfItem = todoItems.findIndex((i) => {
       return i.key === key;
@@ -91,52 +70,48 @@ class TodoList extends Component {
     const item = todoItems[positionOfItem]; // save item for later
     const newItems = todoItems.filter((i) => i.key !== key); // remove item from array
     newItems.splice(positionOfItem + direction, 0, item);
-
-    //this.setState({ items: newItems });
     this.props.onReorderItem(newItems);
 
     console.log(positionOfItem);
   }
 
- 
-
   render() {
     return (
       <div className="todoListMain">
-            <form onSubmit={this.addItem}>
-            <input className="form-control"
-              ref={(a) => {
-                this._inputElement = a;
-              }}
-              placeholder="enter url"
-            />
-            <button type="submit">add</button>
-          </form>
- 
-          
-        
-         <TodoItems
+        <form onSubmit={this.addItem}>
+          <input
+            className="form-control"
+            ref={(a) => {
+              this._inputElement = a;
+            }}
+            placeholder="Enter Youtube Url"
+          />
+          <button type="submit">add</button>
+        </form>
+
+        <TodoItems
           entries={this.props.todoItems}
           delete={this.deleteItem}
           postionChange={this.handleMove}
-        /> 
-        
+        />
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) =>{
+const mapStateToProps = (state) => {
   return {
-      todoItems: state.items
+    todoItems: state.items,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onAddItem: (inputVal)=>dispatch(todoActionCreator.additem(inputVal)),
-    onRemoveItem: (remainItems)=>dispatch(todoActionCreator.removeitem(remainItems)),
-    onReorderItem: (reorderItems)=>dispatch(todoActionCreator.reorderitem(reorderItems))
+    onAddItem: (inputVal) => dispatch(todoActionCreator.additem(inputVal)),
+    onRemoveItem: (remainItems) =>
+      dispatch(todoActionCreator.removeitem(remainItems)),
+    onReorderItem: (reorderItems) =>
+      dispatch(todoActionCreator.reorderitem(reorderItems)),
   };
 };
 

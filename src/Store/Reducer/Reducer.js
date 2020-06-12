@@ -1,9 +1,7 @@
 import * as actionTypes from "../Action/actionConstants";
-import validator from "validator";
 
 const initialState = {
   items: [],
-  error: false
 };
 
 const reducer = (state = initialState, action) => {

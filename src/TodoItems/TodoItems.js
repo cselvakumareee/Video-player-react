@@ -1,49 +1,61 @@
 import React, { Component } from "react";
-
+import Uparrow from "../Assets/Icons/upArrow";
+import Downarrow from "../Assets/Icons/downArrow";
+import Backarrow from "../Assets/Icons/backArrow";
+import './TodoItem.scss';
 
 class TodoItems extends Component {
   constructor(props) {
     super(props);
-    //this.createTasks = this.createTasks.bind(this);
-    
   }
-
-  
 
   delete(key) {
     this.props.delete(key);
   }
 
-  postionChange(key, direction){
-      this.props.postionChange(key, direction);
+  postionChange(key, direction) {
+    this.props.postionChange(key, direction);
   }
+
   render() {
     let listItems = [];
-    if(this.props.entries.length>0){
-  listItems = this.props.entries.map(item=>{
-    return (
-      <li key={item.key}>
-        {item.text}
-        
-        <span onClick={()=>{this.postionChange(item.key, -1)}}> up</span> 
-        <span onClick={()=>{this.postionChange(item.key, 1)}}> down</span>
-        
-        <span
-          onClick={() => {
-            this.delete(item.key);
-          }}
-        >
-          {" "}
-          &#10006;
-        </span>
-      </li>
-    );
-  })
-}
-    return <ul className="theList">{listItems}</ul>;
+    if (this.props.entries.length > 0) {
+      listItems = this.props.entries.map((item) => {
+        return (
+          <li className="list-item" key={item.key}>
+            {item.text}
+
+            <span className="arrows"
+              onClick={() => {
+                this.postionChange(item.key, -1);
+              }}
+            >
+              {" "}
+              <Uparrow />
+            </span>
+            <span className="arrows"
+              onClick={() => {
+                this.postionChange(item.key, 1);
+              }}
+            >
+              {" "}
+              <Downarrow />
+            </span>
+
+            <span className="arrows"
+              onClick={() => {
+                this.delete(item.key);
+              }}
+            >
+              {" "}
+              <Backarrow />
+            </span>
+          </li>
+        );
+      });
+    }
+    return <ol className="theList">{listItems}</ol>;
   }
 }
-
-
 
 export default TodoItems;
